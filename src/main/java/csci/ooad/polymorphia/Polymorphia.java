@@ -47,7 +47,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
         gameNumber++;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 

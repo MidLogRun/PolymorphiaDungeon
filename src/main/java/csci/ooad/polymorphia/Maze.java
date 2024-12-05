@@ -556,8 +556,9 @@ public class Maze {
             return this;
         }
 
-        public void createAndAddHumanPlayer(String humanPlayerName) {
+        public Builder createAndAddHumanPlayer(String humanPlayerName) {
             nextRoom().add(characterFactory.createHuman(humanPlayerName));
+            return this;
         }
 
     }
