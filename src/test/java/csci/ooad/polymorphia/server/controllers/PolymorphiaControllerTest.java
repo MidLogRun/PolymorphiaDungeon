@@ -48,7 +48,7 @@ class PolymorphiaControllerTest {
         //What is the body of the response supposed to be??
         PolymorphiaJsonAdaptor jsonAdaptor = (PolymorphiaJsonAdaptor) response.getBody();
         assert jsonAdaptor != null;
-        assertEquals(jsonAdaptor.getTurn(),0);
+        assertEquals(jsonAdaptor.getTurn(), 0);
         assertEquals(jsonAdaptor.getName(), DEFAULT_GAME_ID);
         System.out.println(jsonAdaptor);
 
@@ -68,21 +68,27 @@ class PolymorphiaControllerTest {
 
     @Test
     void playTurnWithNoHumanPlayer() {
-        // TODO: Implement this test
-       String gameId = "noHumanPlayerGame";
-        PolymorphiaParameters polymorphiaParameters = new PolymorphiaParameters(gameId, "no player",
-                2, 2, 7, 1,
-                2, 2, 2, 10, 2);
-
-        ResponseEntity<?> response = polymorphiaController.createGame(polymorphiaParameters);
-
-        polymorphiaController.playTurn(gameId, "no player");
+        String gameId = "noHumanPlayerGame";
+        //This test plays the default game
+        PolymorphiaController controller = new PolymorphiaController();
+        ResponseEntity<?> response = controller.playTurn(PolymorphiaController.DEFAULT_GAME_ID, "NULL");
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     }
 
     @Test
     void playTurnWithHumanPlayer() {
-        // TODO: Implement this test
+        String gameId = "playerGame";
+        PolymorphiaParameters polymorphiaParameters = new PolymorphiaParameters(gameId, "gamer",
+                2, 2, 7, 1,
+                2, 2, 2, 10, 2);
+
+        polymorphiaController.createGame(polymorphiaParameters);
+        ResponseEntity<?> response = polymorphiaController.playTurn(gameId, "NULL");
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        response = polymorphiaController.playTurn(gameId, "DO_NOTHING");
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+
     }
 
 }

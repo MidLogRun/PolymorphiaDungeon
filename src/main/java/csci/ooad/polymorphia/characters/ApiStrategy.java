@@ -11,6 +11,6 @@ public class ApiStrategy extends HumanStrategy implements Strategy   {
     public Command generateCommand(Character character) {
         APIPlayer apiPlayer =  (APIPlayer) character;
 //I don't care how much this smells this should work for now
-        return generateCommandFromString(character, apiPlayer.getLastCommand());
+        return generateCommandFromString(apiPlayer, apiPlayer.getLastCommand());
     }
 }

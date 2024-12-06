@@ -27,7 +27,7 @@ public class PolymorphiaJsonAdaptor {
         name = gameName;
         turn = polymorphia.getTurnNumber();
         gameOver = polymorphia.isOver();
-        statusMessage = "Turn " + polymorphia.getTurnNumber() + " just ended.";
+        statusMessage = polymorphia.getStatusMessage(); 
         livingAdventurers = polymorphia.getLivingAdventurers().stream().map(Adventurer::getName).toList();
         livingCreatures = polymorphia.getLivingCreatures().stream().map(Creature::getName).toList();
 

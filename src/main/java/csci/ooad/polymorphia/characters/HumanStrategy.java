@@ -2,10 +2,13 @@ package csci.ooad.polymorphia.characters;
 
 import csci.ooad.polymorphia.Food;
 import csci.ooad.polymorphia.Maze;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class HumanStrategy implements Strategy {
+    private static final Logger logger = LoggerFactory.getLogger(HumanStrategy.class);
 
     final CommandFactory commandFactory = new CommandFactory();
 
@@ -60,6 +63,7 @@ public class HumanStrategy implements Strategy {
             options.add(CommandOption.FIGHT);
         }
 
+        logger.info("options: {}", options);
         return options;
     }
 

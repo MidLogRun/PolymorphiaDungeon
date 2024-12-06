@@ -35,7 +35,9 @@ public class Polymorphia implements IMazeSubject, IObservable {
     private Integer turnCount = 0;
     private final Random rand = new Random();
     public List<Character> pendingCharacters = new ArrayList<>();
+    private boolean apiPlayerTurn = false;
     private boolean turnPending = false;
+    private String statusMessage;
 
     public Polymorphia(Maze maze) {
         this("Polymorphia Game " + gameNumber, maze);
@@ -49,6 +51,17 @@ public class Polymorphia implements IMazeSubject, IObservable {
 
     public String getName() {
         return name;
+    }
+
+    public String getStatusMessage(){
+        if (turnPending){
+            statusMessage = "Turn: " + turnCount + " in middle of turn.";
+        }
+        else{
+            statusMessage = "Turn " + getTurnNumber() + " just ended.";
+        }
+
+        return statusMessage;
     }
 
     @Override
@@ -101,7 +114,6 @@ public class Polymorphia implements IMazeSubject, IObservable {
 
         if (apiPlayer.isAlive() && apiPlayer != null) {
             logger.info("returning available commands for API player {}", apiPlayer.getName());
-
             return apiPlayer.getOptions();
         }
         return List.of();
@@ -112,11 +124,16 @@ public class Polymorphia implements IMazeSubject, IObservable {
         if (apiPlayer.isAlive()) {
             apiPlayer.setLastCommand(command);
             apiPlayer.getAction().execute();
+            apiPlayerTurn = false; //referenced in PolymorphiaController
         }
     }
 
     public Boolean inMiddleOfTurn(){
         return turnPending;
+    }
+
+    public Boolean nowApiPlayerTurn(){
+        return apiPlayerTurn;
     }
 
     private List<Character> getPendingCharacters(){
@@ -136,12 +153,12 @@ public class Polymorphia implements IMazeSubject, IObservable {
         }
         turnCount += 1;
 
-        if (inMiddleOfTurn()) {
+        if (apiPlayerTurn) {
             logger.info("Middle of turn");
             executeApiPlayerCommand(commandString);
         }
 
-        logger.info("Starting turn " + turnCount + "...");
+        logger.info("Starting turn {}...", turnCount);
         pendingCharacters = getPendingCharacters();
 
         while (!pendingCharacters.isEmpty()) {
@@ -151,11 +168,8 @@ public class Polymorphia implements IMazeSubject, IObservable {
             // Make sure currentPlayer is still alive. It might have fought a Demon
             if (currentPlayer.isAlive()) {
                 if (currentPlayer.isApiPlayer()) {
-                    System.out.println("True!");
-                    System.out.println(commandString);
                     if (commandString.equals("NULL")){
-                        System.out.println("Yep I am null!");
-                        turnPending = true;
+                        apiPlayerTurn = true;
                         pendingCharacters.remove(currentPlayer);
                     }
                     return;
@@ -169,6 +183,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
             pendingCharacters.remove(currentPlayer);
             notifyObservers(status());
         }
+        apiPlayerTurn = false;
     }
 
     public List<Character> getLivingCharacters() {
