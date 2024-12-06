@@ -23,7 +23,7 @@ public abstract class Character implements Comparable<Character> {
 
     protected final String name;
     private Double health;
-
+    protected String lastCommand;
     private Maze.Room currentLocation;
     protected final Strategy strategy;
 
@@ -43,6 +43,14 @@ public abstract class Character implements Comparable<Character> {
         this.name = name;
         this.health = initialHealth;
         this.strategy = strategy;
+    }
+
+    public void setLastCommand(String lastCommand) {
+        this.lastCommand = lastCommand;
+    }
+
+    public String getLastCommand() {
+        return lastCommand;
     }
 
     Strategy getStrategy() {
