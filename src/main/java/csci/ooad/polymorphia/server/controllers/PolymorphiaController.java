@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 public class PolymorphiaController {
     private static final Logger logger = LoggerFactory.getLogger(PolymorphiaController.class);
-    static String DEFAULT_GAME_ID = "GARLBORL";
+    static String DEFAULT_GAME_ID = "MyGame";
 
     HashMap<String, Polymorphia> games = new HashMap<>();
     public int numGames = 0;
@@ -85,24 +85,41 @@ public class PolymorphiaController {
             return new ResponseEntity<>("Invalid parameters!", HttpStatus.BAD_REQUEST);
         }
 
-        Maze gameMaze = Maze.getNewBuilder()
-                .createFullyConnectedRooms(params.numRooms())
-                .createAndAddAdventurers(params.numAdventurers())
-                .createAndAddAPIPlayer(params.playerName())
-                .createAndAddCowards(params.numCowards())
-                .createAndAddKnights(params.numKnights())
-                .createAndAddGluttons(params.numGluttons())
-                .createAndAddDemons(params.numDemons())
-                .createAndAddCreatures(params.numCreatures())
-                .createAndAddArmor(params.numArmor())
-                .createAndAddFoodItems(params.numFood())
-                .build();
+        Maze gameMaze;
+
+        if (params.playerName() == "NULL"){
+            gameMaze = Maze.getNewBuilder()
+                    .createFullyConnectedRooms(params.numRooms())
+                    .createAndAddAdventurers(params.numAdventurers())
+                    .createAndAddCowards(params.numCowards())
+                    .createAndAddKnights(params.numKnights())
+                    .createAndAddGluttons(params.numGluttons())
+                    .createAndAddDemons(params.numDemons())
+                    .createAndAddCreatures(params.numCreatures())
+                    .createAndAddArmor(params.numArmor())
+                    .createAndAddFoodItems(params.numFood())
+                    .build();
+        } else {
+            gameMaze = Maze.getNewBuilder()
+                    .createFullyConnectedRooms(params.numRooms())
+                    .createAndAddAdventurers(params.numAdventurers())
+                    .createAndAddAPIPlayer(params.playerName())
+                    .createAndAddCowards(params.numCowards())
+                    .createAndAddKnights(params.numKnights())
+                    .createAndAddGluttons(params.numGluttons())
+                    .createAndAddDemons(params.numDemons())
+                    .createAndAddCreatures(params.numCreatures())
+                    .createAndAddArmor(params.numArmor())
+                    .createAndAddFoodItems(params.numFood())
+                    .build();
+        }
+
 
         String gameName = params.name();
         Polymorphia game = new Polymorphia(gameName, gameMaze);
         games.put(gameName, game);
         PolymorphiaJsonAdaptor jsonBody = new PolymorphiaJsonAdaptor(gameName, game);
-
+        numGames++;
         return new ResponseEntity<>(jsonBody, HttpStatus.CREATED);
     }
 
@@ -116,20 +133,13 @@ public class PolymorphiaController {
         }
 
         game.playTurn(command);
+        logger.info("Player selected {}", command);
 
-        System.out.println(command);
-
-        if (game.inMiddleOfTurn()) {
-            System.out.println("Yep I am in the middle of my turn!");
-
+        if (game.nowApiPlayerTurn()) {
             List<Strategy.CommandOption> availableCommands = game.getApiPlayerOptions();
             jsonBody.setAvailableCommandOptions(availableCommands);
             return new ResponseEntity<>(jsonBody, HttpStatus.OK);
         }
-
-
-
-
 
 
         return new ResponseEntity<>(jsonBody, HttpStatus.OK);
