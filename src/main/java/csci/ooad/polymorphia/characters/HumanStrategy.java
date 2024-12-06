@@ -6,7 +6,6 @@ import csci.ooad.polymorphia.Maze;
 import java.util.*;
 
 public class HumanStrategy implements Strategy {
-    public enum CommandOption {EAT, FIGHT, MOVE, WEAR_ARMOR, DO_NOTHING}
 
     final CommandFactory commandFactory = new CommandFactory();
 
@@ -16,6 +15,11 @@ public class HumanStrategy implements Strategy {
         List<CommandOption> availableCommands = availableCommandOptions(character);
         CommandOption choice = getTopLevelChoice(availableCommands, character);
         return getCommand(character, choice);
+    }
+
+    @Override
+    public List<CommandOption> getOptions(Character character) {
+        return availableCommandOptions(character);
     }
 
     Command getCommand(Character character, CommandOption choice) {
@@ -38,7 +42,7 @@ public class HumanStrategy implements Strategy {
         }
     }
 
-    List<CommandOption> availableCommandOptions(Character character) {
+    public List<CommandOption> availableCommandOptions(Character character) {
         Maze.Room currentRoom = character.getCurrentLocation();
 
         List<CommandOption> options = new ArrayList<>();

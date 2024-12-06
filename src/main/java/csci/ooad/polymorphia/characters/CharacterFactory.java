@@ -63,6 +63,10 @@ public class CharacterFactory {
         return new Adventurer(name, KNIGHT_INITIAL_HEALTH, new HumanStrategy());
     }
 
+    public Adventurer createApiPlayer(String name){
+        return new APIPlayer(name, KNIGHT_INITIAL_HEALTH);
+    }
+
     public Adventurer createKnight(String name) {
         return new Adventurer(name, KNIGHT_INITIAL_HEALTH, new FighterStrategy());
     }
