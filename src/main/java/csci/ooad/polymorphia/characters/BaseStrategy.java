@@ -29,7 +29,7 @@ public class BaseStrategy implements Strategy {
     }
 
     @Override
-    public List<HumanStrategy.CommandOption> getOptions(Character character) {
+    public List<CommandOption> getOptions(Character character) {
         return List.of();
     }
 

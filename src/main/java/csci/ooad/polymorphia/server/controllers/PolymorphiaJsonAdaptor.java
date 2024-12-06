@@ -6,6 +6,7 @@ import csci.ooad.polymorphia.Maze;
 import csci.ooad.polymorphia.Polymorphia;
 import csci.ooad.polymorphia.characters.Adventurer;
 import csci.ooad.polymorphia.characters.Creature;
+import csci.ooad.polymorphia.characters.HumanStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,12 +60,19 @@ public class PolymorphiaJsonAdaptor {
         return livingCreatures;
     }
 
-   public List<HashMap<String, Object>> getRooms() {
+    public List<HashMap<String, Object>> getRooms() {
         return rooms;
-   }
+    }
 
     public String getStatusMessage() {
         return statusMessage;
+    }
+
+    public void setAvailableCommandOptions(List<HumanStrategy.CommandOption> commandOptions) {
+        availableCommands.clear();
+        for (HumanStrategy.CommandOption commandOption : commandOptions) {
+            availableCommands.add(commandOption.toString());
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package csci.ooad.polymorphia.server.controllers;
 
 import csci.ooad.polymorphia.Maze;
 import csci.ooad.polymorphia.Polymorphia;
+import csci.ooad.polymorphia.characters.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -87,7 +88,7 @@ public class PolymorphiaController {
         Maze gameMaze = Maze.getNewBuilder()
                 .createFullyConnectedRooms(params.numRooms())
                 .createAndAddAdventurers(params.numAdventurers())
-                .createAndAddHumanPlayer(params.playerName())
+                .createAndAddAPIPlayer(params.playerName())
                 .createAndAddCowards(params.numCowards())
                 .createAndAddKnights(params.numKnights())
                 .createAndAddGluttons(params.numGluttons())
@@ -108,12 +109,28 @@ public class PolymorphiaController {
 
     @PutMapping("/api/game/{gameId}/playTurn/{command}")
     public ResponseEntity<?> playTurn(@PathVariable(name = "gameId") String gameId, @PathVariable(name = "command") String command) {
-
         Polymorphia game = games.get(gameId);
-
-        game.playTurn(command); //play the turn with the command!
-
         PolymorphiaJsonAdaptor jsonBody = new PolymorphiaJsonAdaptor(gameId, game);
+        if (game.isOver()){
+            return new ResponseEntity<>("Game is over!", HttpStatus.BAD_REQUEST);
+        }
+
+        game.playTurn(command);
+
+        System.out.println(command);
+
+        if (game.inMiddleOfTurn()) {
+            System.out.println("Yep I am in the middle of my turn!");
+
+            List<Strategy.CommandOption> availableCommands = game.getApiPlayerOptions();
+            jsonBody.setAvailableCommandOptions(availableCommands);
+            return new ResponseEntity<>(jsonBody, HttpStatus.OK);
+        }
+
+
+
+
+
 
         return new ResponseEntity<>(jsonBody, HttpStatus.OK);
 

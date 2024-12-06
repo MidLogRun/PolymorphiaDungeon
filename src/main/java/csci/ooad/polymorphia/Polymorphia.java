@@ -34,6 +34,8 @@ public class Polymorphia implements IMazeSubject, IObservable {
     private final Maze maze;
     private Integer turnCount = 0;
     private final Random rand = new Random();
+    public List<Character> pendingCharacters = new ArrayList<>();
+    private boolean turnPending = false;
 
     public Polymorphia(Maze maze) {
         this("Polymorphia Game " + gameNumber, maze);
@@ -89,10 +91,40 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return maze.hasLivingAdventurers();
     }
 
-    public void playApiPlayerTurn(String command){
-
+    public APIPlayer getApiCharacter(){
+        APIPlayer apiPlayer = (APIPlayer) getLivingAdventurers().stream().filter(Adventurer::isApiPlayer).findFirst().orElse(null);
+        return apiPlayer;
     }
 
+    public List<HumanStrategy.CommandOption> getApiPlayerOptions() {
+        Character apiPlayer = getApiCharacter();
+
+        if (apiPlayer.isAlive() && apiPlayer != null) {
+            logger.info("returning available commands for API player {}", apiPlayer.getName());
+
+            return apiPlayer.getOptions();
+        }
+        return List.of();
+    }
+
+    public void executeApiPlayerCommand(String command) {
+        APIPlayer apiPlayer = getApiCharacter();
+        if (apiPlayer.isAlive()) {
+            apiPlayer.setLastCommand(command);
+            apiPlayer.getAction().execute();
+        }
+    }
+
+    public Boolean inMiddleOfTurn(){
+        return turnPending;
+    }
+
+    private List<Character> getPendingCharacters(){
+        if (!inMiddleOfTurn()){
+            pendingCharacters = getLivingCharacters();
+        }
+        return pendingCharacters;
+    }
 
     public void playTurn(String commandString) {
         if (isOver()) {
@@ -104,19 +136,29 @@ public class Polymorphia implements IMazeSubject, IObservable {
         }
         turnCount += 1;
 
-        // Process all the characters in random order
-        logger.info("Starting turn " + turnCount + "...");
-        List<Character> remainingCharactersToExecuteTurn = getLivingCharacters();
+        if (inMiddleOfTurn()) {
+            logger.info("Middle of turn");
+            executeApiPlayerCommand(commandString);
+        }
 
-        while (!remainingCharactersToExecuteTurn.isEmpty()) {
-            int index = rand.nextInt(remainingCharactersToExecuteTurn.size());
-            Character currentPlayer = remainingCharactersToExecuteTurn.get(index);
+        logger.info("Starting turn " + turnCount + "...");
+        pendingCharacters = getPendingCharacters();
+
+        while (!pendingCharacters.isEmpty()) {
+            int index = rand.nextInt(pendingCharacters.size());
+            Character currentPlayer = pendingCharacters.get(index);
 
             // Make sure currentPlayer is still alive. It might have fought a Demon
             if (currentPlayer.isAlive()) {
-                if (currentPlayer.isApiPlayer()){
-                    List<HumanStrategy.CommandOption> commandOptions = currentPlayer.getOptions();
-                    currentPlayer.getAction();
+                if (currentPlayer.isApiPlayer()) {
+                    System.out.println("True!");
+                    System.out.println(commandString);
+                    if (commandString.equals("NULL")){
+                        System.out.println("Yep I am null!");
+                        turnPending = true;
+                        pendingCharacters.remove(currentPlayer);
+                    }
+                    return;
                 }
 
                 Command command = currentPlayer.getAction();
@@ -124,7 +166,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
                 logger.info("Turn " + turnCount + ": " + currentPlayer.getName() + " executed " + command.getName());
 
             }
-            remainingCharactersToExecuteTurn.remove(currentPlayer);
+            pendingCharacters.remove(currentPlayer);
             notifyObservers(status());
         }
     }

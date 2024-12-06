@@ -25,7 +25,7 @@ public abstract class Character implements Comparable<Character> {
     private Double health;
 
     private Maze.Room currentLocation;
-    private final Strategy strategy;
+    protected final Strategy strategy;
 
     public Maze.Room getCurrentLocation() {
         return currentLocation;
@@ -125,6 +125,7 @@ public abstract class Character implements Comparable<Character> {
     public Command getAction() {
         return this.strategy.generateCommand(this);
     }
+
 
     public void move(Maze.Room nextLocation) {
         loseMovingHealth(HEALTH_LOST_IN_MOVING_ROOMS);
