@@ -3,6 +3,7 @@ package csci.ooad.polymorphia.characters;
 import csci.ooad.polymorphia.Food;
 import csci.ooad.polymorphia.Maze;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BaseStrategy implements Strategy {
@@ -25,6 +26,11 @@ public class BaseStrategy implements Strategy {
             return commandFactory.createMoveCommand(character, currentRoom.getRandomNeighbor());
         }
         return commandFactory.createDoNothingCommand();
+    }
+
+    @Override
+    public List<HumanStrategy.CommandOption> getOptions(Character character) {
+        return List.of();
     }
 
     Boolean shouldFight(Character character) {

@@ -561,6 +561,11 @@ public class Maze {
             return this;
         }
 
+        public Builder createAndAddAPIPlayer(String apiPlayerName){
+            nextRoom().add(characterFactory.createApiPlayer(apiPlayerName));
+            return this;
+        }
+
     }
 
     private void addRoom(Room aRoom) {

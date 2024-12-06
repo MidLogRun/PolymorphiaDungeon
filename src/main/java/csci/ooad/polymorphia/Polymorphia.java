@@ -3,10 +3,8 @@ package csci.ooad.polymorphia;
 import csci.ooad.layout.intf.IMaze;
 import csci.ooad.layout.intf.IMazeObserver;
 import csci.ooad.layout.intf.IMazeSubject;
-import csci.ooad.polymorphia.characters.Adventurer;
+import csci.ooad.polymorphia.characters.*;
 import csci.ooad.polymorphia.characters.Character;
-import csci.ooad.polymorphia.characters.Command;
-import csci.ooad.polymorphia.characters.Creature;
 import csci.ooad.polymorphia.observer.MazeAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +89,12 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return maze.hasLivingAdventurers();
     }
 
-    public void playTurn() {
+    public void playApiPlayerTurn(String command){
+
+    }
+
+
+    public void playTurn(String commandString) {
         if (isOver()) {
             return;
         }
@@ -111,9 +114,15 @@ public class Polymorphia implements IMazeSubject, IObservable {
 
             // Make sure currentPlayer is still alive. It might have fought a Demon
             if (currentPlayer.isAlive()) {
+                if (currentPlayer.isApiPlayer()){
+                    List<HumanStrategy.CommandOption> commandOptions = currentPlayer.getOptions();
+                    currentPlayer.getAction();
+                }
+
                 Command command = currentPlayer.getAction();
                 command.execute();
                 logger.info("Turn " + turnCount + ": " + currentPlayer.getName() + " executed " + command.getName());
+
             }
             remainingCharactersToExecuteTurn.remove(currentPlayer);
             notifyObservers(status());
@@ -132,7 +141,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
     public void play() {
         while (!isOver()) {
             logger.info(this.toString());
-            playTurn();
+            playTurn(null); //in this play, do not inject a command
         }
         postMessage(EventType.GameStart, getEndOfGameStatus());
     }

@@ -18,6 +18,12 @@ public class HumanStrategy implements Strategy {
         return getCommand(character, choice);
     }
 
+    @Override
+    public List<CommandOption> getOptions(Character character) {
+        return availableCommandOptions(character);
+    }
+
+
     Command getCommand(Character character, CommandOption choice) {
         Maze.Room currentRoom = character.getCurrentLocation();
         switch (choice) {
@@ -38,7 +44,7 @@ public class HumanStrategy implements Strategy {
         }
     }
 
-    List<CommandOption> availableCommandOptions(Character character) {
+    public List<CommandOption> availableCommandOptions(Character character) {
         Maze.Room currentRoom = character.getCurrentLocation();
 
         List<CommandOption> options = new ArrayList<>();

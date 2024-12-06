@@ -50,6 +50,7 @@ class PolymorphiaControllerTest {
         assert jsonAdaptor != null;
         assertEquals(jsonAdaptor.getTurn(),0);
         assertEquals(jsonAdaptor.getName(), DEFAULT_GAME_ID);
+        System.out.println(jsonAdaptor);
 
     }
 
@@ -76,6 +77,7 @@ class PolymorphiaControllerTest {
         ResponseEntity<?> response = polymorphiaController.createGame(polymorphiaParameters);
 
         polymorphiaController.playTurn(gameId, "no player");
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     }
 
     @Test

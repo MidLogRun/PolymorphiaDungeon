@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import static csci.ooad.polymorphia.EventBus.post;
 
@@ -119,6 +120,7 @@ public abstract class Character implements Comparable<Character> {
     public Boolean isCreature() {
         return false;
     }
+    public Boolean isApiPlayer() {return false;}
 
     public Command getAction() {
         return this.strategy.generateCommand(this);
@@ -145,4 +147,7 @@ public abstract class Character implements Comparable<Character> {
         return currentLocation.isHealthiestAdventurer(this);
     }
 
+    public List<HumanStrategy.CommandOption> getOptions() {
+        return strategy.getOptions(this);
+    }
 }
