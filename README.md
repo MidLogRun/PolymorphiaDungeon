@@ -6,10 +6,10 @@
 
 NOTE: Expect some minor edits/updates
 
-Introduction
-Team Members:
-Java Version: 21
-Comments/Assumptions: None
+Introduction  
+Team Members: Matt Long and Garrett Carlisle  
+Java Version: 21  
+
 
 IMPORTANT: You will submit this assignment via a link to your GIT repository. If you are re-using a repository from a previous homework, create a branch called "Homework_6" and commit all changes
 for this assignment into that branch. And turn in a link to this branch.
