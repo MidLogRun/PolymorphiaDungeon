@@ -26,6 +26,7 @@ public class PolymorphiaJsonAdaptor {
     public PolymorphiaJsonAdaptor(String gameName, Polymorphia polymorphia) {
         name = gameName;
         turn = polymorphia.getTurnNumber();
+        inMiddleOfTurn = polymorphia.inMiddleOfTurn();
         gameOver = polymorphia.isOver();
         statusMessage = polymorphia.getStatusMessage(); 
         livingAdventurers = polymorphia.getLivingAdventurers().stream().map(Adventurer::getName).toList();
@@ -52,20 +53,9 @@ public class PolymorphiaJsonAdaptor {
         return turn;
     }
 
-    public List<String> getLivingAdventurers() {
-        return livingAdventurers;
-    }
-
-    public List<String> getLivingCreatures() {
-        return livingCreatures;
-    }
 
     public List<HashMap<String, Object>> getRooms() {
         return rooms;
-    }
-
-    public String getStatusMessage() {
-        return statusMessage;
     }
 
     public void setAvailableCommandOptions(List<HumanStrategy.CommandOption> commandOptions) {

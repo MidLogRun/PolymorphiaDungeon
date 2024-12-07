@@ -37,7 +37,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
     public List<Character> pendingCharacters = new ArrayList<>();
     private boolean apiPlayerTurn = false;
     private boolean turnPending = false;
-    private String statusMessage;
+
 
     public Polymorphia(Maze maze) {
         this("Polymorphia Game " + gameNumber, maze);
@@ -53,11 +53,13 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return name;
     }
 
-    public String getStatusMessage(){
-        if (turnPending){
+    public String getStatusMessage() {
+        String statusMessage = "";
+        if (turnPending) {
             statusMessage = "Turn: " + turnCount + " in middle of turn.";
-        }
-        else{
+        } if (isOver()){
+            statusMessage = "Game Over.";
+        }else {
             statusMessage = "Turn " + getTurnNumber() + " just ended.";
         }
 
@@ -104,7 +106,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return maze.hasLivingAdventurers();
     }
 
-    public Character getApiCharacter(){
+    public Character getApiCharacter() {
         Character apiPlayer = getLivingAdventurers().stream().filter(Adventurer::isApiPlayer).findFirst().orElse(null);
         return apiPlayer;
     }
@@ -128,16 +130,16 @@ public class Polymorphia implements IMazeSubject, IObservable {
         }
     }
 
-    public Boolean inMiddleOfTurn(){
+    public Boolean inMiddleOfTurn() {
         return turnPending;
     }
 
-    public Boolean nowApiPlayerTurn(){
+    public Boolean nowApiPlayerTurn() {
         return apiPlayerTurn;
     }
 
-    private List<Character> getPendingCharacters(){
-        if (!inMiddleOfTurn()){
+    private List<Character> getPendingCharacters() {
+        if (!inMiddleOfTurn()) {
             pendingCharacters = getLivingCharacters();
         }
         return pendingCharacters;
@@ -167,7 +169,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
             // Make sure currentPlayer is still alive. It might have fought a Demon
             if (currentPlayer.isAlive()) {
                 if (currentPlayer.isApiPlayer()) {
-                    if (commandString.equals("NULL")){
+                    if (commandString.equals("NULL")) {
                         apiPlayerTurn = true;
                         turnPending = true;
                         pendingCharacters.remove(currentPlayer);

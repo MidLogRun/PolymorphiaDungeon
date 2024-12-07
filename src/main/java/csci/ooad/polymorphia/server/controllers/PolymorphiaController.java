@@ -34,8 +34,8 @@ public class PolymorphiaController {
         return true;
     }
 
+
     public PolymorphiaController() {
-        // TODO: Create a default game here
         final int defaultNumItems = 1;
         final int defaultNumCreatures = 4;
         final int defaultNumAdventurers = 2;
@@ -60,8 +60,6 @@ public class PolymorphiaController {
 
     @GetMapping("/api/games")
     public ResponseEntity<?> getGames() {
-//        if (games.isEmpty())
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         List<String> gameNames = games.keySet().stream().toList();
         return new ResponseEntity<>(gameNames, HttpStatus.OK);
     }
@@ -73,6 +71,10 @@ public class PolymorphiaController {
         if (game != null){
             PolymorphiaJsonAdaptor jsonBody = new PolymorphiaJsonAdaptor(gameId, game);
             return new ResponseEntity<>(jsonBody, HttpStatus.OK);
+        }
+        else if (game.isOver()){
+            PolymorphiaJsonAdaptor jsonBody = new PolymorphiaJsonAdaptor(gameId, game);
+            return new ResponseEntity<>(jsonBody, HttpStatus.ACCEPTED);
         }
 
         return new ResponseEntity<>("Game not found!", HttpStatus.NOT_FOUND);
@@ -86,7 +88,6 @@ public class PolymorphiaController {
         }
 
         Maze gameMaze;
-
         if (params.playerName() == "NULL"){
             gameMaze = Maze.getNewBuilder()
                     .createFullyConnectedRooms(params.numRooms())
@@ -129,11 +130,10 @@ public class PolymorphiaController {
         Polymorphia game = games.get(gameId);
         PolymorphiaJsonAdaptor jsonBody = new PolymorphiaJsonAdaptor(gameId, game);
         if (game.isOver()){
-            return new ResponseEntity<>("Game is over!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(jsonBody, HttpStatus.ACCEPTED);
         }
 
         game.playTurn(command);
-        logger.info("Player selected {}", command);
 
         if (game.nowApiPlayerTurn()) {
             List<Strategy.CommandOption> availableCommands = game.getApiPlayerOptions();
