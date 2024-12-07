@@ -159,4 +159,8 @@ public abstract class Character implements Comparable<Character> {
     public List<HumanStrategy.CommandOption> getOptions() {
         return strategy.getOptions(this);
     }
+
+    protected Character getCharacter() {
+        return this;
+    }
 }

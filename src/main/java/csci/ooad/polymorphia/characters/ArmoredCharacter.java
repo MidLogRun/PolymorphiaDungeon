@@ -5,6 +5,8 @@ import csci.ooad.polymorphia.Maze;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 
 public class ArmoredCharacter extends Adventurer {
     private static final Logger logger = LoggerFactory.getLogger(ArmoredCharacter.class);
@@ -77,6 +79,26 @@ public class ArmoredCharacter extends Adventurer {
         Double lostHealth = Math.max(0, fightDamage.doubleValue() - armor.strength());    // character cannot gain health here
         logger.info("{} absorbed {} damage", this.armor, armor.strength());
         character.loseFightDamage(lostHealth);
+    }
+
+    @Override
+    protected Character getCharacter() {
+        return character.getCharacter();
+    }
+
+    @Override
+    public Boolean isAdventurer(){
+        return getCharacter().isAdventurer();
+    }
+
+    @Override
+    public Boolean isApiPlayer(){
+        return getCharacter().isApiPlayer();
+    }
+
+    @Override
+    public List<HumanStrategy.CommandOption> getOptions() {
+        return getCharacter().strategy.getOptions(this);
     }
 
     @Override

@@ -104,8 +104,8 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return maze.hasLivingAdventurers();
     }
 
-    public APIPlayer getApiCharacter(){
-        APIPlayer apiPlayer = (APIPlayer) getLivingAdventurers().stream().filter(Adventurer::isApiPlayer).findFirst().orElse(null);
+    public Character getApiCharacter(){
+        Character apiPlayer = getLivingAdventurers().stream().filter(Adventurer::isApiPlayer).findFirst().orElse(null);
         return apiPlayer;
     }
 
@@ -120,7 +120,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
     }
 
     public void executeApiPlayerCommand(String command) {
-        APIPlayer apiPlayer = getApiCharacter();
+        Character apiPlayer = getApiCharacter();
         if (apiPlayer.isAlive()) {
             apiPlayer.setLastCommand(command);
             apiPlayer.getAction().execute();
@@ -147,7 +147,6 @@ public class Polymorphia implements IMazeSubject, IObservable {
         if (isOver()) {
             return;
         }
-
         if (turnCount == 0) {
             logger.info("Starting play...");
         }
@@ -170,6 +169,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
                 if (currentPlayer.isApiPlayer()) {
                     if (commandString.equals("NULL")){
                         apiPlayerTurn = true;
+                        turnPending = true;
                         pendingCharacters.remove(currentPlayer);
                     }
                     return;
@@ -183,7 +183,8 @@ public class Polymorphia implements IMazeSubject, IObservable {
             pendingCharacters.remove(currentPlayer);
             notifyObservers(status());
         }
-        apiPlayerTurn = false;
+
+        turnPending = false;
     }
 
     public List<Character> getLivingCharacters() {
