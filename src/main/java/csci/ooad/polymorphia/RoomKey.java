@@ -1,11 +1,10 @@
 package csci.ooad.polymorphia;
 
 public class RoomKey {
-    Maze.Room room;
-    Boolean used = false;
+    Boolean used;
 
-    public RoomKey(Maze.Room room){
-        this.room = room;
+    public RoomKey(){
+        this.used = false;
     }
 
     Boolean isUsed(){
@@ -16,7 +15,4 @@ public class RoomKey {
         used = true;
     }
 
-    public Maze.Room getRoom(){
-        return room;
-    }
 }

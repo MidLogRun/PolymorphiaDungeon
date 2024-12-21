@@ -8,17 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RoomKeyTest {
     ArtifactFactory artifactFactory = new ArtifactFactory();
 
-    @Test
-    public void testRoomKeyAssignedValue(){
-        Maze.Room room = new Maze.Room("gate room");
-        RoomKey key = artifactFactory.createRoomKey(room);
-        assertEquals(key.getRoom(), room);
-    }
+
 
     @Test
     public void testUseKey(){
-        Maze.Room room = new Maze.Room("gate room");
-        RoomKey key = artifactFactory.createRoomKey(room);
+        RoomKey key = artifactFactory.createRoomKey();
         key.useKey();
         assertTrue(key.isUsed());
     }
