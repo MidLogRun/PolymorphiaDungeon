@@ -135,7 +135,7 @@ public class Maze {
             this.neighbors.add(neighbor);
         }
 
-        private Room connect(Room neighbor) {
+        Room connect(Room neighbor) {
             this.addNeighbor(neighbor);
             neighbor.addNeighbor(this);
             return this;
@@ -566,6 +566,11 @@ public class Maze {
             return this;
         }
 
+        public Builder createGateRoom(String name) {
+            Room room = new GateRoom(name);
+            maze.addRoom(room);
+            return this;
+        }
     }
 
     private void addRoom(Room aRoom) {

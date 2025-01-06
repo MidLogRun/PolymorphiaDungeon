@@ -30,8 +30,9 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return observers;
     }
 
-    private final String name;
-    private final Maze maze;
+    private final List<Maze> mazes = new ArrayList<>();
+    private String name;
+    private Maze maze;
     private Integer turnCount = 0;
     private final Random rand = new Random();
     public List<Character> pendingCharacters = new ArrayList<>();
@@ -251,4 +252,39 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return turnCount;
     }
 
+    public int getNumberOfMazes() {
+        return mazes.size();
+    }
+
+    public static Builder getNewBuilder(){
+        return new Builder();
+    }
+
+    private Polymorphia(){}
+
+    private void setName(String name){
+        this.name = name;
+    }
+
+    public static class Builder {
+        final Polymorphia game = new Polymorphia();
+
+        public Builder addMaze(Maze maze){
+            game.addMaze(maze);
+            return this;
+        }
+
+        public Builder withName(String name){
+            game.setName(name);
+            return this;
+        }
+
+        public Polymorphia build() {
+            return game;
+        }
+    }
+
+    private void addMaze(Maze maze) {
+        mazes.add(maze);
+    }
 }
