@@ -71,7 +71,15 @@ public class Polymorphia implements IMazeSubject, IObservable {
 
     @Override
     public String toString() {
-        return String.join("\n", status()) + "\n" + maze.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String formattedStatus = "\n" + status();
+
+        for (Maze maze : mazes) {
+            stringBuilder.append(formattedStatus + maze.toString());
+        }
+
+       return stringBuilder.toString();
     }
 
     private List<String> status() {
@@ -207,7 +215,11 @@ public class Polymorphia implements IMazeSubject, IObservable {
     }
 
     public List<Character> getLivingCharacters() {
-        return maze.getLivingCharacters();
+        List<Character> livingCharacters = new ArrayList<>();
+        for (Maze maze : mazes){
+            livingCharacters.addAll(maze.getLivingCharacters());
+        }
+        return livingCharacters;
     }
 
     public void postMessage(EventType eventType, String eventDescription) {

@@ -67,6 +67,18 @@ public class Maze {
         getRandomRoom().add(character);
     }
 
+    public void connectMaze(Maze neighbor) throws NoSuchRoomException {
+        getGateRoom().connectCorrespondingRoom(neighbor.getGateRoom());
+    }
+
+    private GateRoom getGateRoom() throws NoSuchRoomException {
+        return rooms.stream()
+                .filter(room -> room instanceof GateRoom)
+                .map(room -> (GateRoom) room) // Cast Room to GateRoom
+                .findFirst()
+                .orElseThrow(() -> new  NoSuchRoomException("No GateRoom found in the maze."));
+    }
+
     public static Builder getNewBuilder() {
         return new Builder();
     }
@@ -566,7 +578,7 @@ public class Maze {
             return this;
         }
 
-        public Builder createGateRoom(String name) {
+        public Builder createAndAddGateRoom(String name) {
             Room room = new GateRoom(name);
             maze.addRoom(room);
             return this;

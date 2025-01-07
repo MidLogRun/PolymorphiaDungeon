@@ -16,6 +16,7 @@ public class PolymorphiaFactory {
         Polymorphia game = Polymorphia.getNewBuilder()
                 .withName(name)
                 .addMazes(mazes)
+                //gate room maze
                 .build();
 
         return game;
