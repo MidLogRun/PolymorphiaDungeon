@@ -1,17 +1,17 @@
 package csci.ooad.polymorphia;
 
 public class RoomKey {
-    Boolean used;
+    private Boolean used;
 
     public RoomKey(){
         this.used = false;
     }
 
-    Boolean isUsed(){
+    public Boolean isUsed(){
         return used;
     }
 
-    void useKey(){
+    public void useKey(){
         used = true;
     }
 
