@@ -20,7 +20,7 @@ public class GateRoomTest {
         GateRoom room1 = new GateRoom("room1");
         GateRoom room2 = new GateRoom("room2");
 
-        room1.connectCorrespondingRoom(room2);
+        room1.connectCorrespondingGateRoom(room2);
         assertTrue(room1.hasNeighbor(room2));
     }
 

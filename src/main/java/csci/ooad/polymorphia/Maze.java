@@ -68,7 +68,7 @@ public class Maze {
     }
 
     public void connectMaze(Maze neighbor) throws NoSuchRoomException {
-        getGateRoom().connectCorrespondingRoom(neighbor.getGateRoom());
+        getGateRoom().connectCorrespondingGateRoom(neighbor.getGateRoom());
     }
 
     private GateRoom getGateRoom() throws NoSuchRoomException {
@@ -328,7 +328,6 @@ public class Maze {
 
         public Builder createGridOfRooms(int rows, int columns, String[][] roomNames) {
             Room[][] roomGrid = new Room[rows][columns];
-            maze.rooms = new ArrayList<>();
             // Notice -- don't use i and j. Use row and column -- they are better
             for (int row = 0; row < rows; row++) {
                 for (int column = 0; column < columns; column++) {
@@ -379,7 +378,6 @@ public class Maze {
         }
 
         public Builder createFullyConnectedRooms(String... roomNames) {
-            maze.rooms = new ArrayList<>();
             for (String roomName : roomNames) {
                 Room currentRoom = new Room(roomName);
                 roomMap.put(roomName, currentRoom);
@@ -396,7 +394,6 @@ public class Maze {
         }
 
         public Builder createConnectedRooms(Integer minConnections, String... roomNames) {
-            maze.rooms = new ArrayList<>();
             for (String roomName : roomNames) {
                 Room currentRoom = new Room(roomName);
                 roomMap.put(roomName, currentRoom);

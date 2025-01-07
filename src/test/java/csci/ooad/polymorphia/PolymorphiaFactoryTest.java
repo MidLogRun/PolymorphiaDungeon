@@ -49,7 +49,7 @@ public class PolymorphiaFactoryTest {
     }
 
     @Test
-    public void testCreateTwo2x2MazesAndPlay() throws NoSuchRoomException {
+    public void testCreateTwoMazeGameAndPlay() throws NoSuchRoomException {
         PolymorphiaFactory gameFactory = new PolymorphiaFactory();
         MazeFactory mazeFactory = new MazeFactory();
 
@@ -64,7 +64,6 @@ public class PolymorphiaFactoryTest {
 
         //Assert
         assertTrue(game.isOver());
-        assertTrue(game.hasLivingCreatures()); //this will always be true since the Adventurer never enters the gate room
 
     }
 

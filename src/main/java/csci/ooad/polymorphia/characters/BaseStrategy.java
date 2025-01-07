@@ -1,6 +1,7 @@
 package csci.ooad.polymorphia.characters;
 
 import csci.ooad.polymorphia.Food;
+import csci.ooad.polymorphia.GateRoom;
 import csci.ooad.polymorphia.Maze;
 
 import java.util.List;
@@ -23,7 +24,12 @@ public class BaseStrategy implements Strategy {
         }
         Maze.Room nextRoom = currentRoom.getRandomNeighbor();
         if (nextRoom != null) {
-            return commandFactory.createMoveCommand(character, currentRoom.getRandomNeighbor());
+            if (nextRoom instanceof GateRoom) {
+                //check if character has a key
+            } else {
+                return commandFactory.createMoveCommand(character, nextRoom);
+            }
+
         }
         return commandFactory.createDoNothingCommand();
     }

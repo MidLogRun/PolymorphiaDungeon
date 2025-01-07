@@ -20,8 +20,8 @@ public class MazeFactory {
 
     public Maze createFullyConnectedMazeWithGateRoom(List<String> adventurerNames, List<String> creatureNames, int numRooms) {
         Maze maze = Maze.getNewBuilder()
-                .createFullyConnectedRooms(numRooms)
                 .createAndAddGateRoom("Threshold")
+                .createFullyConnectedRooms(numRooms)
                 .createAndAddAdventurers(adventurerNames.toArray(new String[0]))
                 .createAndAddCreatures(creatureNames.toArray(new String[0]))
                 .build();
