@@ -3,11 +3,13 @@ package csci.ooad.polymorphia.characters;
 import csci.ooad.polymorphia.EventBus;
 import csci.ooad.polymorphia.EventType;
 import csci.ooad.polymorphia.Maze;
+import csci.ooad.polymorphia.RoomKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.util.List;
+import java.util.*;
+
 
 import static csci.ooad.polymorphia.EventBus.post;
 
@@ -26,6 +28,7 @@ public abstract class Character implements Comparable<Character> {
     protected String lastCommand;
     private Maze.Room currentLocation;
     protected final Strategy strategy;
+    List<RoomKey> keys = new ArrayList<>();
 
     public Maze.Room getCurrentLocation() {
         return currentLocation;
@@ -55,6 +58,10 @@ public abstract class Character implements Comparable<Character> {
 
     Strategy getStrategy() {
         return strategy;
+    }
+
+    public void addKey(RoomKey key){
+        keys.add(key);
     }
 
     @Override
@@ -162,5 +169,14 @@ public abstract class Character implements Comparable<Character> {
 
     protected Character getCharacter() {
         return this;
+    }
+
+    public boolean hasKey() {
+        return keys.size() > 0;
+    }
+
+    public void useKey() {
+        RoomKey key = keys.removeFirst();
+        key.useKey();
     }
 }

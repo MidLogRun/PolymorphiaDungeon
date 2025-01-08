@@ -30,8 +30,9 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return observers;
     }
 
-    private final String name;
-    private final Maze maze;
+    private final List<Maze> mazes = new ArrayList<>();
+    private String name;
+    private Maze maze;
     private Integer turnCount = 0;
     private final Random rand = new Random();
     public List<Character> pendingCharacters = new ArrayList<>();
@@ -46,6 +47,7 @@ public class Polymorphia implements IMazeSubject, IObservable {
     public Polymorphia(String name, Maze maze) {
         this.name = name;
         this.maze = maze;
+        mazes.add(maze);
         gameNumber++;
     }
 
@@ -57,9 +59,10 @@ public class Polymorphia implements IMazeSubject, IObservable {
         String statusMessage = "";
         if (turnPending) {
             statusMessage = "Turn: " + turnCount + " in middle of turn.";
-        } if (isOver()){
+        }
+        if (isOver()) {
             statusMessage = "Game Over.";
-        }else {
+        } else {
             statusMessage = "Turn " + getTurnNumber() + " just ended.";
         }
 
@@ -68,7 +71,15 @@ public class Polymorphia implements IMazeSubject, IObservable {
 
     @Override
     public String toString() {
-        return String.join("\n", status()) + "\n" + maze.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String formattedStatus = "\n" + status();
+
+        for (Maze maze : mazes) {
+            stringBuilder.append(formattedStatus + maze.toString());
+        }
+
+       return stringBuilder.toString();
     }
 
     private List<String> status() {
@@ -86,11 +97,11 @@ public class Polymorphia implements IMazeSubject, IObservable {
     }
 
     public List<Adventurer> getLivingAdventurers() {
-        return maze.getLivingAdventurers();
-    }
-
-    public int numberOfLivingCreatures() {
-        return getLivingCreatures().size();
+        List<Adventurer> livingAdventurers = new ArrayList<>();
+        for (Maze maze : mazes) {
+            livingAdventurers.addAll(maze.getLivingAdventurers());
+        }
+        return livingAdventurers;
     }
 
     // Game is over when all creatures are killed or all adventurers are killed
@@ -98,12 +109,26 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return !hasLivingCreatures() || !hasLivingAdventurers();
     }
 
-    public Boolean hasLivingCreatures() {
-        return maze.hasLivingCreatures();
+    public Boolean hasLivingAdventurers() {
+        for (Maze maze : mazes) {
+            if (maze.hasLivingAdventurers()) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public Boolean hasLivingAdventurers() {
-        return maze.hasLivingAdventurers();
+    public Boolean hasLivingCreatures() {
+        for (Maze maze : mazes) {
+            if (maze.hasLivingCreatures()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int numberOfLivingCreatures() {
+        return getLivingCreatures().size();
     }
 
     public Character getApiCharacter() {
@@ -190,7 +215,11 @@ public class Polymorphia implements IMazeSubject, IObservable {
     }
 
     public List<Character> getLivingCharacters() {
-        return maze.getLivingCharacters();
+        List<Character> livingCharacters = new ArrayList<>();
+        for (Maze maze : mazes){
+            livingCharacters.addAll(maze.getLivingCharacters());
+        }
+        return livingCharacters;
     }
 
     public void postMessage(EventType eventType, String eventDescription) {
@@ -227,7 +256,11 @@ public class Polymorphia implements IMazeSubject, IObservable {
     }
 
     public List<Creature> getLivingCreatures() {
-        return maze.getLivingCreatures();
+        List<Creature> livingCreatures = new ArrayList<>();
+        for (Maze maze : mazes) {
+            livingCreatures.addAll(maze.getLivingCreatures());
+        }
+        return livingCreatures;
     }
 
     public Character getWinner() {
@@ -251,4 +284,45 @@ public class Polymorphia implements IMazeSubject, IObservable {
         return turnCount;
     }
 
+    public int getNumberOfMazes() {
+        return mazes.size();
+    }
+
+    public static Builder getNewBuilder() {
+        return new Builder();
+    }
+
+    private Polymorphia() {
+    }
+
+    private void setName(String name) {
+        this.name = name;
+    }
+
+    public static class Builder {
+        final Polymorphia game = new Polymorphia();
+
+        public Builder addMaze(Maze maze) {
+            game.addMaze(maze);
+            return this;
+        }
+
+        public Builder addMazes(List<Maze> mazes) {
+            game.mazes.addAll(mazes);
+            return this;
+        }
+
+        public Builder withName(String name) {
+            game.setName(name);
+            return this;
+        }
+
+        public Polymorphia build() {
+            return game;
+        }
+    }
+
+    private void addMaze(Maze maze) {
+        mazes.add(maze);
+    }
 }
