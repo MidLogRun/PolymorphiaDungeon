@@ -14,7 +14,7 @@ public class GateRoomTest {
         RoomKey key = new RoomKey();
 
         room.openRoom(key);
-        assertTrue(room.isOpened());
+        assertTrue(room.isOpen());
     }
 
     @Test

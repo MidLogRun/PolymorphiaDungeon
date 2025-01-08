@@ -3,7 +3,6 @@ package csci.ooad.polymorphia.characters;
 import csci.ooad.polymorphia.Food;
 import csci.ooad.polymorphia.GateRoom;
 import csci.ooad.polymorphia.Maze;
-import csci.ooad.polymorphia.Polymorphia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,22 +27,13 @@ public class BaseStrategy implements Strategy {
             return commandFactory.createEatCommand(character, food);
         }
 
+        if (currentRoom.hasKey()){
+            //TODO INVENTORY SYSTEM HERE
+        }
+
         Maze.Room nextRoom = currentRoom.getRandomNeighbor();
         if (nextRoom != null) {
-            if (nextRoom instanceof GateRoom) {
-                //check if character has a key
-                if (character.hasKey()) {
-                    logger.info("{} opened {} with a key!", character.getName(), nextRoom.getName());
-                    character.useKey();
-                    return commandFactory.createMoveCommand(character, nextRoom);
-                } else {
-                    logger.info("Uh oh! {} does not have a key for {}\n \tDoing nothing instead.", character.getName(), nextRoom.getName());
-                    return commandFactory.createDoNothingCommand();
-                }
-            } else {
-                return commandFactory.createMoveCommand(character, nextRoom);
-            }
-
+            return determineRoomChoices(character, nextRoom);
         }
         return commandFactory.createDoNothingCommand();
     }
@@ -56,4 +46,27 @@ public class BaseStrategy implements Strategy {
     Boolean shouldFight(Character character) {
         return character.creatureInRoomWithMe() && character.iAmHealthiestInRoom();
     }
+
+    Boolean roomHasKey(Maze.Room room) {
+        return room.hasKey();
+    }
+
+    public Command determineRoomChoices(Character character, Maze.Room room) {
+        if (room != null) {
+            if (room.isGateRoom()) {
+                if (room.isOpen()) {
+                    return commandFactory.createMoveCommand(character, room);
+                } else {
+                    if (character.hasKey()) {
+                        return commandFactory.createOpenRoomCommand(character, (GateRoom) room);
+                    }
+                }
+            } else {
+                return commandFactory.createMoveCommand(character, room);
+            }
+        }
+        logger.info("Room is either null or character doesn't have a key");
+        return commandFactory.createDoNothingCommand();
+    }
+
 }

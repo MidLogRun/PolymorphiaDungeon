@@ -22,6 +22,7 @@ public class MazeFactory {
         Maze maze = Maze.getNewBuilder()
                 .createAndAddGateRoom("Threshold")
                 .createFullyConnectedRooms(numRooms)
+                .createAndAddKeys()
                 .createAndAddAdventurers(adventurerNames.toArray(new String[0]))
                 .createAndAddCreatures(creatureNames.toArray(new String[0]))
                 .build();
@@ -42,14 +43,12 @@ public class MazeFactory {
         List<Maze> connectedMazes = new ArrayList<>();
 
         // Divide adventurers and creatures evenly across mazes
-        int totalAdventurers = adventurerNames.size();
-        int totalCreatures = creatureNames.size();
 
-        int baseAdventurersPerMaze = totalAdventurers / numberToCreate;
-        int extraAdventurers = totalAdventurers % numberToCreate;
+        int baseAdventurersPerMaze = adventurerNames.size() / numberToCreate;
+        int extraAdventurers = adventurerNames.size() % numberToCreate;
 
-        int baseCreaturesPerMaze = totalCreatures / numberToCreate;
-        int extraCreatures = totalCreatures % numberToCreate;
+        int baseCreaturesPerMaze =  creatureNames.size() / numberToCreate;
+        int extraCreatures =  creatureNames.size()  % numberToCreate;
 
         int adventurerIndex = 0;
         int creatureIndex = 0;
@@ -59,15 +58,12 @@ public class MazeFactory {
             int adventurersForThisMaze = baseAdventurersPerMaze + (i < extraAdventurers ? 1 : 0);
             int creaturesForThisMaze = baseCreaturesPerMaze + (i < extraCreatures ? 1 : 0);
 
-            // Get sublists for adventurers and creatures
             List<String> mazeAdventurers = adventurerNames.subList(adventurerIndex, adventurerIndex + adventurersForThisMaze);
             List<String> mazeCreatures = creatureNames.subList(creatureIndex, creatureIndex + creaturesForThisMaze);
 
-            // Create the maze
             Maze maze = createFullyConnectedMazeWithGateRoom(new ArrayList<>(mazeAdventurers), new ArrayList<>(mazeCreatures), numRooms);
             connectedMazes.add(maze);
 
-            // Update indices
             adventurerIndex += adventurersForThisMaze;
             creatureIndex += creaturesForThisMaze;
         }

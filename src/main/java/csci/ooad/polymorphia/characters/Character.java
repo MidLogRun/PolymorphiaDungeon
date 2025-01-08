@@ -1,9 +1,6 @@
 package csci.ooad.polymorphia.characters;
 
-import csci.ooad.polymorphia.EventBus;
-import csci.ooad.polymorphia.EventType;
-import csci.ooad.polymorphia.Maze;
-import csci.ooad.polymorphia.RoomKey;
+import csci.ooad.polymorphia.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +57,7 @@ public abstract class Character implements Comparable<Character> {
         return strategy;
     }
 
-    public void addKey(RoomKey key){
+    public void addKey(RoomKey key) {
         keys.add(key);
     }
 
@@ -132,10 +129,14 @@ public abstract class Character implements Comparable<Character> {
     public Boolean isAdventurer() {
         return false;
     }
+
     public Boolean isCreature() {
         return false;
     }
-    public Boolean isApiPlayer() {return false;}
+
+    public Boolean isApiPlayer() {
+        return false;
+    }
 
     public Command getAction() {
         return this.strategy.generateCommand(this);
@@ -154,6 +155,7 @@ public abstract class Character implements Comparable<Character> {
         post(EventType.Moved, message);
 
     }
+
     public void gainHealth(double healthValue) {
         this.health += healthValue;
         logger.info("{} gained health: {}", getName(), formatter.format(getHealth()));
@@ -175,8 +177,12 @@ public abstract class Character implements Comparable<Character> {
         return keys.size() > 0;
     }
 
-    public void useKey() {
-        RoomKey key = keys.removeFirst();
-        key.useKey();
+    public RoomKey getKey() {
+        return keys.removeFirst();
+    }
+
+    public void openRoom(GateRoom room) {
+        RoomKey key = getKey();
+        room.openRoom(key);
     }
 }

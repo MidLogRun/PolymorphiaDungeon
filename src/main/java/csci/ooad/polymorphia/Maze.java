@@ -101,7 +101,7 @@ public class Maze {
         private final List<Character> characters = new ArrayList<>();
         private final List<Food> foodItems = new ArrayList<>();
         private final List<Armor> armors = new ArrayList<>();
-
+        private final List<RoomKey> keys = new ArrayList<>();
 
         public Room(String name) {
             this.name = name;
@@ -163,6 +163,10 @@ public class Maze {
         private void add(Character character) {
             characters.add(character);
             character.enterRoom(this);
+        }
+
+        private void add(RoomKey key){
+            keys.add(key);
         }
 
         public Boolean hasLivingCreatures() {
@@ -290,6 +294,18 @@ public class Maze {
 
         public void removeItem(Armor armor) {
             armors.remove(armor);
+        }
+
+        public boolean isGateRoom() {
+            return false;
+        }
+
+        public boolean isOpen() {
+            return true;
+        }
+
+        public Boolean hasKey() {
+            return keys.size() > 0;
         }
     }
 
@@ -580,6 +596,19 @@ public class Maze {
             maze.addRoom(room);
             return this;
         }
+
+        public Builder createAndAddKeys() {
+            int numKeysToCreate = maze.countGateRooms();
+            for (int i = 0; i < numKeysToCreate; i++) {
+                RoomKey key = artifactFactory.createRoomKey();
+                nextRoom().add(key);
+            }
+            return this;
+        }
+    }
+
+    private Integer countGateRooms(){
+        return (int) rooms.stream().filter(room-> room instanceof GateRoom).count();
     }
 
     private void addRoom(Room aRoom) {
