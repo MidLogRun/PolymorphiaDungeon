@@ -3,6 +3,7 @@ package csci.ooad.polymorphia.characters;
 import csci.ooad.polymorphia.Food;
 import csci.ooad.polymorphia.GateRoom;
 import csci.ooad.polymorphia.Maze;
+import csci.ooad.polymorphia.RoomKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,8 @@ public class BaseStrategy implements Strategy {
 
         if (currentRoom.hasKey()){
             //TODO INVENTORY SYSTEM HERE
+            RoomKey key = currentRoom.popKey();
+            return commandFactory.createPickUpItemCommand(character, key);
         }
 
         Maze.Room nextRoom = currentRoom.getRandomNeighbor();
@@ -52,6 +55,7 @@ public class BaseStrategy implements Strategy {
     }
 
     public Command determineRoomChoices(Character character, Maze.Room room) {
+        logger.info("{} is determining their options in {}", character.getName(), room.getName());
         if (room != null) {
             if (room.isGateRoom()) {
                 if (room.isOpen()) {
@@ -65,7 +69,6 @@ public class BaseStrategy implements Strategy {
                 return commandFactory.createMoveCommand(character, room);
             }
         }
-        logger.info("Room is either null or character doesn't have a key");
         return commandFactory.createDoNothingCommand();
     }
 

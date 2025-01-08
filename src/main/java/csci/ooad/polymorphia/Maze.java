@@ -307,6 +307,10 @@ public class Maze {
         public Boolean hasKey() {
             return keys.size() > 0;
         }
+
+        public RoomKey popKey() {
+            return keys.removeFirst();
+        }
     }
 
     public static class Builder {

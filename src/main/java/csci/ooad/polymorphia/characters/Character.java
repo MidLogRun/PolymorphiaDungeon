@@ -25,7 +25,7 @@ public abstract class Character implements Comparable<Character> {
     protected String lastCommand;
     private Maze.Room currentLocation;
     protected final Strategy strategy;
-    List<RoomKey> keys = new ArrayList<>();
+    private final List<RoomKey> keys = new ArrayList<>(); //TODO current inventory system
 
     public Maze.Room getCurrentLocation() {
         return currentLocation;
