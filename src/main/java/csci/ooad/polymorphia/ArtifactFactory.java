@@ -41,4 +41,8 @@ public class ArtifactFactory {
         }
         return armors;
     }
+
+    public RoomKey createRoomKey() {
+        return new RoomKey();
+    }
 }

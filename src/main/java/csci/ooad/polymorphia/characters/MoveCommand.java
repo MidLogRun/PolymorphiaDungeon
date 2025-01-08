@@ -1,5 +1,6 @@
 package csci.ooad.polymorphia.characters;
 
+import csci.ooad.polymorphia.GateRoom;
 import csci.ooad.polymorphia.Maze;
 
 public class MoveCommand extends PolymorphiaCommand {

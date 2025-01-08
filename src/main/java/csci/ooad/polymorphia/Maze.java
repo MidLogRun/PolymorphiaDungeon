@@ -67,6 +67,18 @@ public class Maze {
         getRandomRoom().add(character);
     }
 
+    public void connectMaze(Maze neighbor) throws NoSuchRoomException {
+        getGateRoom().connectCorrespondingGateRoom(neighbor.getGateRoom());
+    }
+
+    private GateRoom getGateRoom() throws NoSuchRoomException {
+        return rooms.stream()
+                .filter(room -> room instanceof GateRoom)
+                .map(room -> (GateRoom) room) // Cast Room to GateRoom
+                .findFirst()
+                .orElseThrow(() -> new  NoSuchRoomException("No GateRoom found in the maze."));
+    }
+
     public static Builder getNewBuilder() {
         return new Builder();
     }
@@ -135,7 +147,7 @@ public class Maze {
             this.neighbors.add(neighbor);
         }
 
-        private Room connect(Room neighbor) {
+        Room connect(Room neighbor) {
             this.addNeighbor(neighbor);
             neighbor.addNeighbor(this);
             return this;
@@ -316,7 +328,6 @@ public class Maze {
 
         public Builder createGridOfRooms(int rows, int columns, String[][] roomNames) {
             Room[][] roomGrid = new Room[rows][columns];
-            maze.rooms = new ArrayList<>();
             // Notice -- don't use i and j. Use row and column -- they are better
             for (int row = 0; row < rows; row++) {
                 for (int column = 0; column < columns; column++) {
@@ -367,7 +378,6 @@ public class Maze {
         }
 
         public Builder createFullyConnectedRooms(String... roomNames) {
-            maze.rooms = new ArrayList<>();
             for (String roomName : roomNames) {
                 Room currentRoom = new Room(roomName);
                 roomMap.put(roomName, currentRoom);
@@ -384,7 +394,6 @@ public class Maze {
         }
 
         public Builder createConnectedRooms(Integer minConnections, String... roomNames) {
-            maze.rooms = new ArrayList<>();
             for (String roomName : roomNames) {
                 Room currentRoom = new Room(roomName);
                 roomMap.put(roomName, currentRoom);
@@ -566,6 +575,11 @@ public class Maze {
             return this;
         }
 
+        public Builder createAndAddGateRoom(String name) {
+            Room room = new GateRoom(name);
+            maze.addRoom(room);
+            return this;
+        }
     }
 
     private void addRoom(Room aRoom) {
