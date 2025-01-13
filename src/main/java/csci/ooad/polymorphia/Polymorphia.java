@@ -75,8 +75,13 @@ public class Polymorphia implements IMazeSubject, IObservable {
 
         String formattedStatus = "\n" + status();
 
+        stringBuilder.append(formattedStatus);
+
+        int numberOfMazes = 0;
         for (Maze maze : mazes) {
-            stringBuilder.append(formattedStatus + maze.toString());
+            numberOfMazes++;
+            stringBuilder.append("\n------Maze "+ numberOfMazes + "------");
+            stringBuilder.append("\n" + maze.toString());
         }
 
        return stringBuilder.toString();

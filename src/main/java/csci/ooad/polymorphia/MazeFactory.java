@@ -20,7 +20,7 @@ public class MazeFactory {
 
     public Maze createFullyConnectedMazeWithGateRoom(List<String> adventurerNames, List<String> creatureNames, int numRooms) {
         Maze maze = Maze.getNewBuilder()
-                .createAndAddGateRoom("Threshold")
+                .createAndAddGateRoom()
                 .createFullyConnectedRooms(numRooms)
                 .createAndAddKeys()
                 .createAndAddAdventurers(adventurerNames.toArray(new String[0]))
@@ -28,6 +28,17 @@ public class MazeFactory {
                 .build();
         return maze;
     }
+
+    public Maze createFullyConnectedMazeWithGateRoom(List<String> creatureNames, int numRooms) {
+        Maze maze = Maze.getNewBuilder()
+                .createAndAddGateRoom("GateRoom")
+                .createFullyConnectedRooms(numRooms)
+                .createAndAddKeys()
+                .createAndAddCreatures(creatureNames.toArray(new String[0]))
+                .build();
+        return maze;
+    }
+
 
     public Maze createFullyConnectedMazeWithGateRoom(int numAdventurers, int numCreatures, int numRooms) {
         Maze maze = Maze.getNewBuilder()

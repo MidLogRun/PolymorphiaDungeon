@@ -2,6 +2,7 @@ package csci.ooad.polymorphia;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,7 +57,12 @@ public class PolymorphiaFactoryTest {
         int numberOfMazes = 2;
         int numberOfRoomsPerMaze = 1;
 
-        List<Maze> mazes = mazeFactory.createConnectedMazes(List.of("Frodo"), List.of("Dragon", "Ogre"), numberOfMazes, numberOfRoomsPerMaze);
+        Maze mazeOne = mazeFactory.createFullyConnectedMazeWithGateRoom(Collections.singletonList("Tim"), Collections.singletonList("Dragon"), 1);
+        Maze mazeTwo = mazeFactory.createFullyConnectedMazeWithGateRoom(Collections.singletonList("Ogre"), 1);
+        mazeOne.connectMaze(mazeTwo);
+
+        List<Maze> mazes = List.of(mazeOne, mazeTwo);
+
         Polymorphia game = gameFactory.createMultiMazeGame("two maze game", mazes);
 
         //Act
@@ -64,7 +70,24 @@ public class PolymorphiaFactoryTest {
 
         //Assert
         assertTrue(game.isOver());
+    }
 
+    @Test
+    public void testCreateFiveMazeGameAndPlay() throws NoSuchRoomException {
+        PolymorphiaFactory gameFactory = new PolymorphiaFactory();
+        MazeFactory mazeFactory = new MazeFactory();
+
+        int numberOfMazes = 5;
+        int numberOfRoomsPerMaze = 1;
+
+        List<String> adventurerNames = List.of("Tim", "Barnson", "Dupri", "Caladan");
+        List<String> creatureNames = List.of("Evil Doer", "Tree goblin", "Dragon", "Mouse of Madness", "Meal worm");
+
+        List<Maze> mazes = mazeFactory.createConnectedMazes(adventurerNames, creatureNames, numberOfMazes, numberOfRoomsPerMaze);
+
+        Polymorphia game = gameFactory.createMultiMazeGame("five maze game", mazes);
+        game.play();
+        assertTrue(game.isOver());
     }
 
 

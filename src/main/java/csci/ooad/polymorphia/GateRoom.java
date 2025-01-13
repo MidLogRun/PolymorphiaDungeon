@@ -1,6 +1,7 @@
 package csci.ooad.polymorphia;
 
 public class GateRoom extends Maze.Room {
+    GateRoom correspondingRoom;
     private Boolean isOpened = false;
 
     public GateRoom(String name) {
@@ -8,7 +9,11 @@ public class GateRoom extends Maze.Room {
     }
 
     public void connectCorrespondingGateRoom(GateRoom correspondingRoom) {
-        this.connect(correspondingRoom);
+        if (this.correspondingRoom == null) {
+            this.correspondingRoom = correspondingRoom;
+            connect(correspondingRoom);
+            correspondingRoom.connectCorrespondingGateRoom(this);
+        }
     }
 
     @Override
@@ -22,8 +27,11 @@ public class GateRoom extends Maze.Room {
     }
 
     public void openRoom(RoomKey key){
+        if (isOpened) return;
+
         if (!key.isUsed()){
             isOpened = true;
+            correspondingRoom.openRoom(key);
             key.useKey();
         }
     }

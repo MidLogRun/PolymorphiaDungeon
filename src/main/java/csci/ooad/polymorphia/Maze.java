@@ -595,6 +595,13 @@ public class Maze {
             return this;
         }
 
+        public Builder createAndAddGateRoom(){
+            Random rand = new Random();
+            Room room = new GateRoom(ROOM_NAMES[rand.nextInt(ROOM_NAMES.length)]);
+            maze.addRoom(room);
+            return this;
+        }
+
         public Builder createAndAddGateRoom(String name) {
             Room room = new GateRoom(name);
             maze.addRoom(room);

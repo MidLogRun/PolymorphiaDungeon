@@ -28,7 +28,7 @@ public class BaseStrategy implements Strategy {
             return commandFactory.createEatCommand(character, food);
         }
 
-        if (currentRoom.hasKey()){
+        if (currentRoom.hasKey()) {
             //TODO INVENTORY SYSTEM HERE
             RoomKey key = currentRoom.popKey();
             return commandFactory.createPickUpItemCommand(character, key);
@@ -55,7 +55,7 @@ public class BaseStrategy implements Strategy {
     }
 
     public Command determineRoomChoices(Character character, Maze.Room room) {
-        logger.info("{} is determining their options in {}", character.getName(), room.getName());
+        logger.info("{} is determining their options for room {}", character.getName(), room.getName());
         if (room != null) {
             if (room.isGateRoom()) {
                 if (room.isOpen()) {
@@ -63,6 +63,9 @@ public class BaseStrategy implements Strategy {
                 } else {
                     if (character.hasKey()) {
                         return commandFactory.createOpenRoomCommand(character, (GateRoom) room);
+                    } else {
+                        Maze.Room additionalNextRoom = room.getRandomNeighbor();
+                        return commandFactory.createMoveCommand(character, additionalNextRoom);
                     }
                 }
             } else {
